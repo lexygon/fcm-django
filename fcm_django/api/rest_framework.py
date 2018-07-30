@@ -63,7 +63,7 @@ class UniqueRegistrationSerializerMixin(Serializer):
                 devices = Device.objects.filter(
                     registration_id=attrs["registration_id"]) \
                     .exclude(id=primary_key)
-                if (attrs["active"]):
+                if attrs["active"]:
                     devices.filter(~Q(user=user)).update(active=False)
                 devices = devices.filter(user=user)
             else:
@@ -102,7 +102,7 @@ class IsOwner(permissions.BasePermission):
 
 # Mixins
 class DeviceViewSetMixin(object):
-    lookup_field = "registration_id"
+    lookup_field = SETTINGS["VIEWSET_LOOKUP_FIELD"]
 
     def perform_create(self, serializer):
         if is_user_authenticated(self.request.user):
